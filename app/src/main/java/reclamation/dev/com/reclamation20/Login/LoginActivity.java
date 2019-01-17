@@ -30,7 +30,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.HashMap;
 import java.util.Map;
 
-import reclamation.dev.com.reclamation20.Profile.ProfileActivity;
+import reclamation.dev.com.reclamation20.Home.MainActivity;
 import reclamation.dev.com.reclamation20.R;
 
 public class LoginActivity extends AppCompatActivity {
@@ -58,7 +58,9 @@ public class LoginActivity extends AppCompatActivity {
 
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (settings.getString("logged", "").toString().equals("logged")) {
-            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+            System.out.println("useriddddLogin:           "+settings.getString("userid","").toString());
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
 
         }
@@ -89,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     RequestQueue MyRequestQueue = Volley.newRequestQueue(mContext);
 
 
-                    String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/auth";
+                    String url = "http://192.168.8.105/rec/web/app_dev.php/s/users/auth";
                     System.out.println(url);
                     StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override
@@ -102,11 +104,13 @@ public class LoginActivity extends AppCompatActivity {
                                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putString("logged", "logged");
-                                editor.putString("iduser",""+response);
+                                editor.putString("userid",""+response);
+                                System.out.println("useriddddLogin:           "+settings.getString("userid","").toString());
+
                                 editor.apply();
                                 Toast.makeText(getApplicationContext(), "Successfull Login", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                             }
                             mProgressBar.setVisibility(View.GONE);
