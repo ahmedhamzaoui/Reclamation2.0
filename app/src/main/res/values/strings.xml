@@ -76,4 +76,7 @@
 
 
     <string name="access_token">pk.eyJ1IjoibGl3YS1sZW1qaWQiLCJhIjoiY2pwZW1kOTJyMDFuODNwcWh5NGJlYTRqMCJ9.pY5bkG_oPpfvipibruplHA</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

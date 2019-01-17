@@ -31,8 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import reclamation.dev.com.reclamation20.Home.MainActivity;
+import reclamation.dev.com.reclamation20.Profile.ProfileActivity;
 import reclamation.dev.com.reclamation20.R;
 
 import static reclamation.dev.com.reclamation20.Login.LoginActivity.PREFS_NAME;
@@ -95,7 +94,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 editor.apply();
                                 Toast.makeText(getApplicationContext(), "Successfull Registred", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                Intent intent = new Intent(RegisterActivity.this, ProfileActivity.class);
                                 startActivity(intent);
                             System.out.println("response" + response);
 

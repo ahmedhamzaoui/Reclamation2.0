@@ -30,9 +30,8 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.HashMap;
 import java.util.Map;
 
+import reclamation.dev.com.reclamation20.Profile.ProfileActivity;
 import reclamation.dev.com.reclamation20.R;
-
-import reclamation.dev.com.reclamation20.Home.MainActivity;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -59,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
 
         final SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         if (settings.getString("logged", "").toString().equals("logged")) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
             startActivity(intent);
 
         }
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
                                 editor.apply();
                                 Toast.makeText(getApplicationContext(), "Successfull Login", Toast.LENGTH_SHORT).show();
 
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
                                 startActivity(intent);
                             }
                             mProgressBar.setVisibility(View.GONE);
