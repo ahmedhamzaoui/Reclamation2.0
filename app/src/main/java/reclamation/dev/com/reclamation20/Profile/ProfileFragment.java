@@ -90,7 +90,6 @@ public class ProfileFragment extends Fragment {
         mPosts = (TextView) view.findViewById(R.id.tvPosts);
         mFollowers = (TextView) view.findViewById(R.id.tvFollowers);
         mFollowing = (TextView) view.findViewById(R.id.tvFollowing);
-        progressBar = (ProgressBar) view.findViewById(R.id.profileProgressBar);
         gridView = (GridView) view.findViewById(R.id.gridView);
         toolbar = (Toolbar) view.findViewById(R.id.profileToolBar);
         profileMenu = (ImageView) view.findViewById(R.id.profileImage);
