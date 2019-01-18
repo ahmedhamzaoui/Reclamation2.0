@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,7 +32,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import reclamation.dev.com.reclamation20.Dialog.ConfirmPasswordDialog;
 import reclamation.dev.com.reclamation20.Models.Image;
 import reclamation.dev.com.reclamation20.R;
+import reclamation.dev.com.reclamation20.Utils.CommentListAdapter;
 
+import static com.mapbox.mapboxsdk.Mapbox.getApplicationContext;
 import static reclamation.dev.com.reclamation20.Login.LoginActivity.PREFS_NAME;
 
 /**
@@ -40,7 +43,7 @@ import static reclamation.dev.com.reclamation20.Login.LoginActivity.PREFS_NAME;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends Fragment implements ConfirmPasswordDialog.OnConfirmPasswordListener {
     // TODO: Rename parameter arguments, choose names that match
 
     private EditText mDisplayName,mUsername ,mEmail,mdesc ;
@@ -117,7 +120,7 @@ public class EditProfileFragment extends Fragment {
                         System.out.println("bundle:"+bundle);
                         if (!mEmail.getText().toString().equals(bundle.getString("email"))) {
                             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
-                            dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
+                            dialog.show(getFragmentManager(),getString(R.string.confirm_password_dialog));
                             dialog.setTargetFragment(EditProfileFragment.this, 1);
                             bundle.putString("email",mEmail.getText().toString());
                             System.out.println(bundle);
@@ -130,9 +133,8 @@ public class EditProfileFragment extends Fragment {
                         }
                         if (!mUsername.getText().toString().equals(bundle.getString("username"))) {
                             ConfirmPasswordDialog dialog = new ConfirmPasswordDialog();
-                            dialog.show(getFragmentManager(), getString(R.string.confirm_password_dialog));
+                            dialog.show(getFragmentManager(),getString(R.string.confirm_password_dialog));
                             dialog.setTargetFragment(EditProfileFragment.this, 1);
-                            ;
                             MyData.put("username", mUsername.getText().toString());
                         }else {
                             MyData.put("username", bundle.getString("username"));
@@ -157,4 +159,45 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onConfirmPassword(String password) {
+
+        RequestQueue MyRequestQueue = Volley.newRequestQueue(getActivity());
+        final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+
+
+        String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/confirme";
+        StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                //This code is executed if the server responds, whether or not the response contains data.
+                //The String 'response' contains the server's response.
+                if (settings.getString("iduser", "").equals(response)) {
+
+
+
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Password incorrect", Toast.LENGTH_SHORT).show();
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("id", settings.getString("iduser", "")); //Add the data you'd like to send to the server.
+                MyData.put("password", password); //Add the data you'd like to send to the server.
+                return MyData;
+            }
+        };
+        MyRequestQueue.add(MyStringRequest);
+
+    }
 }
