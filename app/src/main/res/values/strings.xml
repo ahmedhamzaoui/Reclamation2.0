@@ -19,6 +19,7 @@
 
     <!--Fragment Names -->
     <string name="profile_fragment">Profile</string>
+    <string name="comment_fragment">Comments</string>
     <string name="edit_profile_fragment">Edit Profile</string>
     <string name="view_post_fragment">View Post</string>
 

@@ -96,7 +96,7 @@ public class EditProfileFragment extends Fragment {
 
                 final SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
-                String url = "http://192.168.8.105/rec/web/app_dev.php/s/users/profileedit/"+settings.getString("userid","");
+                String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/profileedit/"+settings.getString("userid","");
                 System.out.println(url);
                 StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     @Override
@@ -135,7 +135,7 @@ public class EditProfileFragment extends Fragment {
                             ;
                             MyData.put("username", mUsername.getText().toString());
                         }else {
-                            MyData.put("username", bundle.getString("usernameun "));
+                            MyData.put("username", bundle.getString("username"));
 
                         }
                         MyData.put("fullname",mDisplayName.getText().toString()); //Add the data you'd like to send to the server.

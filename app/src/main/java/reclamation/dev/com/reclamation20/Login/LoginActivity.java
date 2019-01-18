@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                     RequestQueue MyRequestQueue = Volley.newRequestQueue(mContext);
 
 
-                    String url = "http://192.168.8.105/rec/web/app_dev.php/s/users/auth";
+                    String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/auth";
                     System.out.println(url);
                     StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override

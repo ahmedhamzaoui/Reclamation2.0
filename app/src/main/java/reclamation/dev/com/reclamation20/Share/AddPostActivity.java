@@ -232,8 +232,8 @@ public class AddPostActivity extends AppCompatActivity {
                 params.put("description",description.getText().toString().trim());
                 params.put("tag",tag.getText().toString().trim());
                 params.put("userid",settings.getString("userid",""));
-                params.put("longitude","38.2222222222222222");
-                params.put("latitude","38.2222222222222222");
+                params.put("longitude",longitude+"");
+                params.put("latitude",latitude+"");
                 params.put("image",imageToString(bitmap));
                      System.out.println("params: "+ settings.getString("userid",""));
                 return params;

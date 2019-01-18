@@ -1,10 +1,15 @@
 package reclamation.dev.com.reclamation20.Utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -39,6 +44,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import reclamation.dev.com.reclamation20.CommentActivity;
 import reclamation.dev.com.reclamation20.Constants;
 import reclamation.dev.com.reclamation20.Dialog.ConfirmPasswordDialog;
 import reclamation.dev.com.reclamation20.Home.MainActivity;
@@ -48,11 +54,17 @@ import reclamation.dev.com.reclamation20.Models.User;
 import reclamation.dev.com.reclamation20.Models.UserAccountSettings;
 import reclamation.dev.com.reclamation20.MyModels.Likes;
 import reclamation.dev.com.reclamation20.Profile.EditProfileFragment;
+import reclamation.dev.com.reclamation20.Profile.ProfileActivity;
 import reclamation.dev.com.reclamation20.R;
+import reclamation.dev.com.reclamation20.ViewCommentsFragment;
 
 import static reclamation.dev.com.reclamation20.Constants.URL_FAV;
 import static reclamation.dev.com.reclamation20.Constants.URL_IMAGE;
+import static reclamation.dev.com.reclamation20.Constants.URL_LIKE;
 import static reclamation.dev.com.reclamation20.Constants.URL_LIST_FAV;
+import static reclamation.dev.com.reclamation20.Constants.URL_LIST_LIKES;
+import static reclamation.dev.com.reclamation20.Constants.URL_NB_COMM;
+import static reclamation.dev.com.reclamation20.Constants.URL_NB_LIKES;
 import static reclamation.dev.com.reclamation20.Login.LoginActivity.PREFS_NAME;
 
 public class MainfeedListAdapter extends ArrayAdapter<Photo> {
@@ -138,6 +150,41 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
 
         holder.caption.setText(getItem(position).getCaption());
 
+
+        holder.heartWhite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestQueue MyRequestQueue = Volley.newRequestQueue(getContext());
+
+
+                final SharedPreferences settings = getContext().getSharedPreferences(PREFS_NAME, 0);
+
+                StringRequest MyStringRequest = new StringRequest(Request.Method.POST, URL_LIKE, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        notifyDataSetChanged();
+                    }
+                }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //This code is executed if there is an error.
+                    }
+                }) {
+                    protected Map<String, String> getParams() {
+                        Map<String, String> MyData = new HashMap<String, String>();
+                        MyData.put("userid",settings.getString("userid","")); //Add the data you'd like to send to the server.
+                        MyData.put("idpost",getItem(position).getPhoto_id()+""); //Add the data you'd like to send to the server.
+
+                        System.out.println(MyData.toString());
+                        return MyData;
+                    }
+                };
+                MyRequestQueue.add(MyStringRequest);
+
+            }
+        });
+
+
         holder.fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,6 +196,7 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
                 StringRequest MyStringRequest = new StringRequest(Request.Method.POST, URL_FAV, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        notifyDataSetChanged();
 
                         System.out.println("response:         "+response);
 
@@ -213,18 +261,104 @@ public class MainfeedListAdapter extends ArrayAdapter<Photo> {
 
 
 
+        System.out.println(settings.getString("userid",""));
+        StringRequest MyStringRequest2 = new StringRequest(Request.Method.POST, URL_LIST_LIKES, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+
+                if (response.equals(getItem(position).getPhoto_id())){
+                    holder.heartWhite.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_heart_red));
+
+                }
+                else {
+                    holder.heartWhite.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_heart_white));
+
+                }
+
+
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("userid",settings.getString("userid","")); //Add the data you'd like to send to the server.
+                MyData.put("idpost",getItem(position).getPhoto_id()); //Add the data you'd like to send to the server.
+                return MyData;
+            }
+        };
+        MyRequestQueue.add(MyStringRequest2);
+
+
+
+
+        StringRequest MyStringRequest3 = new StringRequest(Request.Method.POST, URL_NB_LIKES, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                holder.likes.setText("Liked By "+response);
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("idpost",getItem(position).getPhoto_id()+""); //Add the data you'd like to send to the server.
+
+                System.out.println(MyData.toString());
+                return MyData;
+            }
+        };
+        MyRequestQueue.add(MyStringRequest3);
+
+        StringRequest MyStringRequest4 = new StringRequest(Request.Method.POST, URL_NB_COMM, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                holder.comments.setText("View "+response+" comments...");
+            }
+        }, new Response.ErrorListener() { //Create an error listener to handle errors appropriately.
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //This code is executed if there is an error.
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> MyData = new HashMap<String, String>();
+                MyData.put("idpost",getItem(position).getPhoto_id()+""); //Add the data you'd like to send to the server.
+
+                System.out.println(MyData.toString());
+                return MyData;
+            }
+        };
+        MyRequestQueue.add(MyStringRequest4);
+
+
 
         //set the comment
-        List<Comment> comments = getItem(position).getComments();
-        holder.comments.setText("View all " + comments.size() + " comments");
-        holder.comment.setOnClickListener(new View.OnClickListener() {
+        holder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: loading comment thread for " + getItem(position).getPhoto_id());
-                ((MainActivity)mContext).onCommentThreadSelected(getItem(position), holder.settings);
+                Intent i =new Intent(getContext(),CommentActivity.class);
+                i.putExtra("userid",settings.getString("userid",""));
+                i.putExtra("idpost",getItem(position).getPhoto_id());
+                getContext().startActivity(i);
+               /* ViewCommentsFragment fragment = new ViewCommentsFragment();
+                Bundle args = new Bundle();
+                args.putString("idpost",getItem(position).getPhoto_id());
+                args.putString("userid",settings.getString("userid",""));
 
-                //going to need to do something else?
-            }
+                fragment.setArguments(args);
+                FragmentTransaction transaction =((AppCompatActivity) mContext).getSupportFragmentManager()
+                        .beginTransaction();
+                transaction.replace(R.id.container, fragment);
+                transaction.commit();
+           */ }
         });
 
         //set the profile image

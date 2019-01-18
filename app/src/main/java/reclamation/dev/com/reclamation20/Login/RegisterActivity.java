@@ -39,7 +39,7 @@ import static reclamation.dev.com.reclamation20.Login.LoginActivity.PREFS_NAME;
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String TAG = "RegisterActivity";
-    private static final String URL_REGISTER = "http://192.168.8.105/rec/web/app_dev.php/s/users/new";
+    private static final String URL_REGISTER = "http://192.168.1.20/rec/web/app_dev.php/s/users/new";
 
     private Context mContext;
     private String email, username, password;
@@ -81,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
                     RequestQueue MyRequestQueue = Volley.newRequestQueue(mContext);
 
 
-                    String url = "http://192.168.8.105/rec/web/app_dev.php/s/users/new";
+                    String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/new";
                     System.out.println(url);
                     StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                         @Override

@@ -110,7 +110,7 @@ public class ProfileFragment extends Fragment {
         RequestQueue MyRequestQueue = Volley.newRequestQueue(getActivity());
 
 
-        String url = "http://192.168.8.105/rec/web/app_dev.php/s/users/profile";
+        String url = "http://192.168.1.20/rec/web/app_dev.php/s/users/profile";
         System.out.println(url);
         StringRequest MyStringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
